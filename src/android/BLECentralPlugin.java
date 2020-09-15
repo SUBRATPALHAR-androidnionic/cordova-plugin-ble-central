@@ -234,7 +234,11 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
             String macAddress = args.getString(0);
             UUID serviceUUID = uuidFromString(args.getString(1));
             UUID characteristicUUID = uuidFromString(args.getString(2));
-            byte[] data = args.getArrayBuffer(3);
+            JSONArray jsonArray = args.getJSONArray(3);
+            byte[] data = new byte[jsonArray.length()];
+            for (int i = 0; i < jsonArray.length(); i++) {
+                data[i]=(byte)(((int)jsonArray.get(i)) & 0xFF);
+            }
             int type = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
             writeWithoutAscii(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
 

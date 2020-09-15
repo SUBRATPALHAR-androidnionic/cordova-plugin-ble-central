@@ -188,7 +188,7 @@ module.exports = {
         cordova.exec(success, failure, 'BLE', 'writeWithoutResponse', [device_id, service_uuid, characteristic_uuid, value]);
     },
 
-    // android only, value must be an ArrayBuffer without ascii conversion
+    // android only, value must be an JSON-ARRAY without ascii conversion
     writeCommandWithoutAsciiConversion: function (device_id, service_uuid, characteristic_uuid, value, success, failure) {
         cordova.exec(success, failure, 'BLE', 'writeCommandWithoutAsciiConversion', [device_id, service_uuid, characteristic_uuid, value]);
     },
