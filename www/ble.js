@@ -188,6 +188,11 @@ module.exports = {
         cordova.exec(success, failure, 'BLE', 'writeWithoutResponse', [device_id, service_uuid, characteristic_uuid, value]);
     },
 
+    // android only, value must be an ArrayBuffer without ascii conversion
+    writeCommandWithoutAsciiConversion: function (device_id, service_uuid, characteristic_uuid, value, success, failure) {
+        cordova.exec(success, failure, 'BLE', 'writeCommandWithoutAsciiConversion', [device_id, service_uuid, characteristic_uuid, value]);
+    },
+
     // success callback is called on notification
     notify: function (device_id, service_uuid, characteristic_uuid, success, failure) {
         console.log("WARNING: notify is deprecated, use startNotification");
