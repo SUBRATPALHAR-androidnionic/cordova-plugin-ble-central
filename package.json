@@ -1,0 +1,27 @@
+{
+  "name": "cordova-plugin-ble-central",
+  "version": "1.0.0",
+  "description": "This plugin enables communication between a phone and Bluetooth Low Energy (BLE) peripherals.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SUBRATPALHAR-androidnionic/cordova-plugin-ble-central.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/SUBRATPALHAR-androidnionic/cordova-plugin-ble-central/issues"
+  },
+  "homepage": "https://github.com/SUBRATPALHAR-androidnionic/cordova-plugin-ble-central#readme",
+  "cordova": {
+    "id": "cordova-plugin-ble-central",
+    "platforms": [
+      "ios",
+      "android",
+      "wp8"
+    ]
+  }
+}
