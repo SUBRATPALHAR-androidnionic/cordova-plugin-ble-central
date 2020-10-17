@@ -100,7 +100,7 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
     boolean reportDuplicates = false;
 
     // Android 23 requires new permissions for BluetoothLeScanner.startScan()
-    private static final String ACCESS_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final String ACCESS_COARSE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int REQUEST_ACCESS_COARSE_LOCATION = 2;
     private CallbackContext permissionCallback;
     private UUID[] serviceUUIDs;
@@ -244,20 +244,18 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
             int type = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
             writeWithoutAscii(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
         } else if (action.equals(WRITE_HEX_STRING)) {
+            /** writes unsigned hex number in byte array max: 256 [0-255] */
 
             String macAddress = args.getString(0);
             UUID serviceUUID = uuidFromString(args.getString(1));
             UUID characteristicUUID = uuidFromString(args.getString(2));
-
-            String writeString = args.getString(3);
-            byte[] data = new byte[writeString.length() / 2];
-            for (int i = 0; i < data.length; i++) {
-                int index = i * 2;
-                int j = Integer.parseInt(writeString.substring(index, index + 2), 16);
-                data[i] = (byte) j;
+            JSONArray jsonArray = args.getJSONArray(3);
+            byte[] data = new byte[jsonArray.length()];
+            for (int i = 0; i < jsonArray.length(); i++) {
+                int hexInt = Integer.parseInt(jsonArray.get(i), 16);
+                data[i]=(byte)((hexInt) & 0xFF);
             }
-
-            int type = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE;
+            int type = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
             write(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
         } else if (action.equals(TEST_WRITE)) {
 
