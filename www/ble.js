@@ -193,6 +193,14 @@ module.exports = {
         cordova.exec(success, failure, 'BLE', 'writeCommandWithoutAsciiConversion', [device_id, service_uuid, characteristic_uuid, value]);
     },
 
+    writeHexString: function (device_id, service_uuid, characteristic_uuid, value, success, failure) {
+        cordova.exec(success, failure, 'BLE', 'writeHexString', [device_id, service_uuid, characteristic_uuid, value]);
+    },
+
+    testWrite: function (device_id, service_uuid, characteristic_uuid, value, success, failure) {
+        cordova.exec(success, failure, 'BLE', 'testWrite', [device_id, service_uuid, characteristic_uuid, value]);
+    },
+
     // success callback is called on notification
     notify: function (device_id, service_uuid, characteristic_uuid, success, failure) {
         console.log("WARNING: notify is deprecated, use startNotification");

@@ -66,6 +66,8 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
     private static final String WRITE = "write";
     private static final String WRITE_WITHOUT_RESPONSE = "writeWithoutResponse";
     private static final String WRITE_WITHOUT_ASCII_CONVERSION = "writeCommandWithoutAsciiConversion";
+    private static final String WRITE_HEX_STRING = "writeHexString";
+    private static final String TEST_WRITE = "testWrite";
 
     private static final String READ_RSSI = "readRSSI";
 
@@ -241,7 +243,31 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
             }
             int type = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
             writeWithoutAscii(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
+        } else if (action.equals(WRITE_HEX_STRING)) {
 
+            String macAddress = args.getString(0);
+            UUID serviceUUID = uuidFromString(args.getString(1));
+            UUID characteristicUUID = uuidFromString(args.getString(2));
+
+            String writeString = args.getString(3);
+            byte[] data = new byte[writeString.length() / 2];
+            for (int i = 0; i < data.length; i++) {
+                int index = i * 2;
+                int j = Integer.parseInt(writeString.substring(index, index + 2), 16);
+                data[i] = (byte) j;
+            }
+
+            int type = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE;
+            write(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
+        } else if (action.equals(TEST_WRITE)) {
+
+            String macAddress = args.getString(0);
+            UUID serviceUUID = uuidFromString(args.getString(1));
+            UUID characteristicUUID = uuidFromString(args.getString(2));
+            JSONArray jsonArray = args.getJSONArray(3);
+            byte[] data = {(byte)0x32, (byte)0x2C, (byte)0x31};
+            int type = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
+            writeWithoutAscii(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
         } else if (action.equals(START_NOTIFICATION)) {
 
             String macAddress = args.getString(0);
