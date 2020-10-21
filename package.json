@@ -1,6 +1,6 @@
 {
   "name": "@subratpalhar92/subrat-cordova-plugin-ble",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "This plugin enables communication between a phone and Bluetooth Low Energy (BLE) peripherals.",
   "main": "index.js",
   "scripts": {

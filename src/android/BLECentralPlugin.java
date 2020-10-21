@@ -67,6 +67,7 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
     private static final String WRITE_WITHOUT_RESPONSE = "writeWithoutResponse";
     private static final String WRITE_HEX_BYTE = "writeHexByte";
     private static final String WRITE_HEX_STRING = "writeHexString";
+    private static final String WRITE_STRING_WITH_GETBYTES = "writeStringWithGetBytes";
     private static final String TEST_WRITE = "testWrite";
 
     private static final String READ_RSSI = "readRSSI";
@@ -257,6 +258,17 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
                 int hexInt = Integer.parseInt(((String)jsonArray.get(i)), 16);
                 data[i]=(byte)((hexInt) & 0xFF);
             }
+            int type = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
+            write(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
+        
+        } else if (action.equals(WRITE_STRING_WITH_GETBYTES)) {
+
+            /** takes string input & convert it into ByteArray with getBytes() */
+            String macAddress = args.getString(0);
+            UUID serviceUUID = uuidFromString(args.getString(1));
+            UUID characteristicUUID = uuidFromString(args.getString(2));
+            String stringData = args.getString(3);
+            byte[] data = stringData.getBytes();
             int type = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
             write(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
 

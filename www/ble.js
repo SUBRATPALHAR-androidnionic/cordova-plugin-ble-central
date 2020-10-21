@@ -197,6 +197,10 @@ module.exports = {
         cordova.exec(success, failure, 'BLE', 'writeHexString', [device_id, service_uuid, characteristic_uuid, value]);
     },
 
+    writeStringWithGetBytes: function (device_id, service_uuid, characteristic_uuid, value, success, failure) {
+        cordova.exec(success, failure, 'BLE', 'writeStringWithGetBytes', [device_id, service_uuid, characteristic_uuid, value]);
+    },
+
     testWrite: function (device_id, service_uuid, characteristic_uuid, value, success, failure) {
         cordova.exec(success, failure, 'BLE', 'testWrite', [device_id, service_uuid, characteristic_uuid, value]);
     },
