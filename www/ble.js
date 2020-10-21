@@ -189,8 +189,8 @@ module.exports = {
     },
 
     // android only, value must be an JSON-ARRAY without ascii conversion
-    writeCommandWithoutAsciiConversion: function (device_id, service_uuid, characteristic_uuid, value, success, failure) {
-        cordova.exec(success, failure, 'BLE', 'writeCommandWithoutAsciiConversion', [device_id, service_uuid, characteristic_uuid, value]);
+    writeHexByte: function (device_id, service_uuid, characteristic_uuid, value, success, failure) {
+        cordova.exec(success, failure, 'BLE', 'writeHexByte', [device_id, service_uuid, characteristic_uuid, value]);
     },
 
     writeHexString: function (device_id, service_uuid, characteristic_uuid, value, success, failure) {

@@ -65,7 +65,7 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
     private static final String READ = "read";
     private static final String WRITE = "write";
     private static final String WRITE_WITHOUT_RESPONSE = "writeWithoutResponse";
-    private static final String WRITE_WITHOUT_ASCII_CONVERSION = "writeCommandWithoutAsciiConversion";
+    private static final String WRITE_HEX_BYTE = "writeHexByte";
     private static final String WRITE_HEX_STRING = "writeHexString";
     private static final String TEST_WRITE = "testWrite";
 
@@ -231,8 +231,9 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
             int type = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE;
             write(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
 
-        } else if (action.equals(WRITE_WITHOUT_ASCII_CONVERSION)) {
+        } else if (action.equals(WRITE_HEX_BYTE)) {
 
+            /** writes unsigned hex number in byte array max: 256 [0-255], accepts args in HEX Numbers */
             String macAddress = args.getString(0);
             UUID serviceUUID = uuidFromString(args.getString(1));
             UUID characteristicUUID = uuidFromString(args.getString(2));
@@ -242,21 +243,23 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
                 data[i]=(byte)(((int)jsonArray.get(i)) & 0xFF);
             }
             int type = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
-            writeWithoutAscii(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
-        } else if (action.equals(WRITE_HEX_STRING)) {
-            /** writes unsigned hex number in byte array max: 256 [0-255] */
+            write(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
 
+        } else if (action.equals(WRITE_HEX_STRING)) {
+
+            /** writes unsigned hex number in byte array max: 256 [0-255], accepts args in DEC & convert it to HEX Numbers */
             String macAddress = args.getString(0);
             UUID serviceUUID = uuidFromString(args.getString(1));
             UUID characteristicUUID = uuidFromString(args.getString(2));
             JSONArray jsonArray = args.getJSONArray(3);
             byte[] data = new byte[jsonArray.length()];
             for (int i = 0; i < jsonArray.length(); i++) {
-                int hexInt = Integer.parseInt(jsonArray.get(i), 16);
+                int hexInt = Integer.parseInt(((String)jsonArray.get(i)), 16);
                 data[i]=(byte)((hexInt) & 0xFF);
             }
             int type = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
             write(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
+
         } else if (action.equals(TEST_WRITE)) {
 
             String macAddress = args.getString(0);
@@ -265,7 +268,8 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
             JSONArray jsonArray = args.getJSONArray(3);
             byte[] data = {(byte)0x32, (byte)0x2C, (byte)0x31};
             int type = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
-            writeWithoutAscii(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
+            write(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
+
         } else if (action.equals(START_NOTIFICATION)) {
 
             String macAddress = args.getString(0);
@@ -552,27 +556,6 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
     }
 
     private void write(CallbackContext callbackContext, String macAddress, UUID serviceUUID, UUID characteristicUUID,
-                       byte[] data, int writeType) {
-
-        Peripheral peripheral = peripherals.get(macAddress);
-
-        if (peripheral == null) {
-            callbackContext.error("Peripheral " + macAddress + " not found.");
-            return;
-        }
-
-        if (!peripheral.isConnected()) {
-            callbackContext.error("Peripheral " + macAddress + " is not connected.");
-            return;
-        }
-
-        //peripheral.writeCharacteristic(callbackContext, serviceUUID, characteristicUUID, data, writeType);
-        peripheral.queueWrite(callbackContext, serviceUUID, characteristicUUID, data, writeType);
-
-    }
-
-
-    private void writeWithoutAscii(CallbackContext callbackContext, String macAddress, UUID serviceUUID, UUID characteristicUUID,
                        byte[] data, int writeType) {
 
         Peripheral peripheral = peripherals.get(macAddress);
