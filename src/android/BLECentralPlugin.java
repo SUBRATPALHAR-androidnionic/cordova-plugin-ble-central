@@ -269,7 +269,7 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
             UUID characteristicUUID = uuidFromString(args.getString(2));
             String stringData = args.getString(3);
             byte[] data = stringData.getBytes();
-            int type = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
+            int type = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE;
             write(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
 
         } else if (action.equals(TEST_WRITE)) {
@@ -279,7 +279,7 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
             UUID characteristicUUID = uuidFromString(args.getString(2));
             JSONArray jsonArray = args.getJSONArray(3);
             byte[] data = {(byte)0x32, (byte)0x2C, (byte)0x31};
-            int type = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
+            int type = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE;
             write(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
 
         } else if (action.equals(START_NOTIFICATION)) {
