@@ -201,6 +201,10 @@ module.exports = {
         cordova.exec(success, failure, 'BLE', 'writeStringWithGetBytes', [device_id, service_uuid, characteristic_uuid, value]);
     },
 
+    writeStringWithGetBytesWithoutResponse: function (device_id, service_uuid, characteristic_uuid, value, success, failure) {
+        cordova.exec(success, failure, 'BLE', 'writeStringWithGetBytesWithoutResponse', [device_id, service_uuid, characteristic_uuid, value]);
+    },
+
     testWrite: function (device_id, service_uuid, characteristic_uuid, value, success, failure) {
         cordova.exec(success, failure, 'BLE', 'testWrite', [device_id, service_uuid, characteristic_uuid, value]);
     },
