@@ -67,6 +67,7 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
     private static final String WRITE_WITHOUT_RESPONSE = "writeWithoutResponse";
     private static final String WRITE_HEX_BYTE = "writeHexByte";
     private static final String WRITE_HEX_STRING = "writeHexString";
+    private static final String WRITE_HEX_STRING_WITHOUT_RESPONSE = "writeHexStringWithoutResponse";
     private static final String WRITE_STRING_WITH_GETBYTES = "writeStringWithGetBytes";
     private static final String WRITE_STRING_WITH_GETBYTES_WITHOUT_RESPONSE = "writeStringWithGetBytesWithoutResponse";
     private static final String TEST_WRITE = "testWrite";
@@ -249,17 +250,38 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
 
         } else if (action.equals(WRITE_HEX_STRING)) {
 
-            /** writes unsigned hex number in byte array max: 256 [0-255], accepts args in DEC & convert it to HEX Numbers */
+            /** Accepts Hex strings,, && write Hex Strings directly [With-Response (Default)]*/
             String macAddress = args.getString(0);
             UUID serviceUUID = uuidFromString(args.getString(1));
             UUID characteristicUUID = uuidFromString(args.getString(2));
-            JSONArray jsonArray = args.getJSONArray(3);
-            byte[] data = new byte[jsonArray.length()];
-            for (int i = 0; i < jsonArray.length(); i++) {
-                int hexInt = Integer.parseInt(((String)jsonArray.get(i)), 16);
-                data[i]=(byte)((hexInt) & 0xFF);
+
+            String hexString = args.getString(3);
+            byte[] data = new byte[hexString.length() / 2];
+            for (int i = 0; i < data.length; i++) {
+                int index = i * 2;
+                int j = Integer.parseInt(hexString.substring(index, index + 2), 16);
+                data[i] = (byte) j;
             }
+
             int type = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT;
+            write(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
+
+        } else if (action.equals(WRITE_HEX_STRING_WITHOUT_RESPONSE)) {
+
+            /** Accepts Hex strings,, && write Hex Strings directly [WithoutResponse]*/
+            String macAddress = args.getString(0);
+            UUID serviceUUID = uuidFromString(args.getString(1));
+            UUID characteristicUUID = uuidFromString(args.getString(2));
+
+            String hexString = args.getString(3);
+            byte[] data = new byte[hexString.length() / 2];
+            for (int i = 0; i < data.length; i++) {
+                int index = i * 2;
+                int j = Integer.parseInt(hexString.substring(index, index + 2), 16);
+                data[i] = (byte) j;
+            }
+
+            int type = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE;
             write(callbackContext, macAddress, serviceUUID, characteristicUUID, data, type);
         
         } else if (action.equals(WRITE_STRING_WITH_GETBYTES)) {
@@ -286,6 +308,7 @@ public class BLECentralPlugin extends CordovaPlugin implements BluetoothAdapter.
 
         } else if (action.equals(TEST_WRITE)) {
 
+            /** @deprected #removeable */
             String macAddress = args.getString(0);
             UUID serviceUUID = uuidFromString(args.getString(1));
             UUID characteristicUUID = uuidFromString(args.getString(2));
